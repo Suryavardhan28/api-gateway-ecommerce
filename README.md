@@ -45,7 +45,6 @@ The API Gateway provides:
 
     ```env
     PORT=8000
-    NODE_ENV=development
     USER_SERVICE_URL=http://localhost:8081
     PRODUCT_SERVICE_URL=http://localhost:8082
     ORDER_SERVICE_URL=http://localhost:8083
@@ -64,50 +63,6 @@ The API Gateway provides:
 
     # Production
     npm start
-    ```
-
-## Deployment
-
-### Docker Deployment
-
-1. **Build the Image**
-
-    ```bash
-    docker build -t api-gateway:1.0 .
-    ```
-
-2. **Run the Container**
-    ```bash
-    docker run -p 8000:8000 \
-      -e NODE_ENV=production \
-      -e USER_SERVICE_URL=http://user-service:8081 \
-      -e PRODUCT_SERVICE_URL=http://product-service:8082 \
-      -e ORDER_SERVICE_URL=http://order-service:8083 \
-      -e PAYMENT_SERVICE_URL=http://payment-service:8084 \
-      -e NOTIFICATION_SERVICE_URL=http://notification-service:8085 \
-      -e JWT_SECRET=your_jwt_secret \
-      -e RATE_LIMIT_WINDOW_MS=900000 \
-      -e RATE_LIMIT_MAX_REQUESTS=100 \
-      api-gateway:1.0
-    ```
-
-### Kubernetes Deployment
-
-1. **Create Namespace**
-
-    ```bash
-    kubectl create namespace ecommerce
-    ```
-
-2. **Apply Kubernetes Manifests**
-
-    ```bash
-    kubectl apply -f kubernetes/
-    ```
-
-3. **Verify Deployment**
-    ```bash
-    kubectl get all -n ecommerce -l app=api-gateway
     ```
 
 ## API Documentation
@@ -137,6 +92,7 @@ The API Gateway provides:
 -   `GET /api/payments/history` - Get payment history
 -   `GET /api/notifications` - Get notifications
 -   `GET /api/notifications/:id` - Get notification by ID
+-   `PUT /api/notifications/read-all` - Mark all notifications as read
 -   `PUT /api/notifications/:id/read` - Mark notification as read
 -   `DELETE /api/notifications/:id` - Delete notification
 -   `GET /api/notifications/unread/count` - Get unread notifications count
@@ -188,24 +144,3 @@ The API Gateway provides:
     - Check rate limit configuration
     - Monitor request patterns
     - Adjust limits if needed
-
-### Debug Commands
-
-```bash
-# Check pod status
-kubectl get pods -n ecommerce -l app=api-gateway
-
-# Check service logs
-kubectl logs -f deployment/api-gateway -n ecommerce
-
-# Check service health
-curl http://localhost:8000/api/health
-curl http://localhost:8000/api/services/health
-
-# Test rate limiting
-curl -X POST http://localhost:8000/api/users/login -H "Content-Type: application/json" -d '{"email":"test@example.com","password":"password"}'
-```
-
-## License
-
-MIT License

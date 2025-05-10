@@ -5,7 +5,7 @@ dotenv.config();
 
 const config = {
     env: process.env.NODE_ENV || "development",
-    port: parseInt(process.env.PORT || "8000", 10),
+    port: parseInt(process.env.PORT, 10),
 
     // JWT configuration
     jwt: {
@@ -18,7 +18,7 @@ const config = {
         enabled: process.env.SERVICE_DISCOVERY_ENABLED === "true",
         provider: process.env.SERVICE_DISCOVERY_PROVIDER || "consul",
         host: process.env.SERVICE_DISCOVERY_HOST || "localhost",
-        port: parseInt(process.env.SERVICE_DISCOVERY_PORT || "8500", 10),
+        port: parseInt(process.env.SERVICE_DISCOVERY_PORT, 10),
     },
 
     // Circuit breaker configuration
@@ -49,30 +49,29 @@ const config = {
     // Microservices URLs and configuration
     services: {
         product: {
-            url: process.env.PRODUCT_SERVICE_URL || "http://localhost:3002",
+            url: process.env.PRODUCT_SERVICE_URL,
             timeout: parseInt(
                 process.env.PRODUCT_SERVICE_TIMEOUT || "5000",
                 10
             ),
         },
         order: {
-            url: process.env.ORDER_SERVICE_URL || "http://localhost:3003",
+            url: process.env.ORDER_SERVICE_URL,
             timeout: parseInt(process.env.ORDER_SERVICE_TIMEOUT || "5000", 10),
         },
         payment: {
-            url: process.env.PAYMENT_SERVICE_URL || "http://localhost:3004",
+            url: process.env.PAYMENT_SERVICE_URL,
             timeout: parseInt(
                 process.env.PAYMENT_SERVICE_TIMEOUT || "5000",
                 10
             ),
         },
         user: {
-            url: process.env.USER_SERVICE_URL || "http://localhost:3005",
+            url: process.env.USER_SERVICE_URL,
             timeout: parseInt(process.env.USER_SERVICE_TIMEOUT || "5000", 10),
         },
         notification: {
-            url:
-                process.env.NOTIFICATION_SERVICE_URL || "http://localhost:3006",
+            url: process.env.NOTIFICATION_SERVICE_URL,
             timeout: parseInt(
                 process.env.NOTIFICATION_SERVICE_TIMEOUT || "5000",
                 10
@@ -91,6 +90,9 @@ const config = {
             "x-service-token",
             "x-request-id",
         ],
+        exposedHeaders: ["Authorization"],
+        preflightContinue: false,
+        optionsSuccessStatus: 204,
     },
 };
 

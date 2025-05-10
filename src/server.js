@@ -16,8 +16,39 @@ const logger = require("./config/logger");
 const app = express();
 
 // 1. Basic security middleware
-app.use(helmet()); // Security headers
+app.use(
+    helmet({
+        contentSecurityPolicy: false, // Disable helmet's CSP so we can use our custom one
+    })
+); // Security headers
 app.use(cors(config.cors)); // CORS configuration
+
+// Custom CSP header that's more permissive for development
+app.use((req, res, next) => {
+    // Set a very permissive CSP for API responses
+    res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src 'self' data: https: fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' localhost:* api-gateway:* ws: wss: http: https:;"
+    );
+    next();
+});
+
+// Health check endpoints - explicit and early
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        service: "API Gateway",
+        time: new Date().toISOString(),
+    });
+});
+
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        service: "API Gateway",
+        time: new Date().toISOString(),
+    });
+});
 
 // 2. Request tracking
 app.use(requestId); // Add request ID to each request
@@ -68,7 +99,7 @@ app.use(routes);
 app.use(errorHandler);
 
 // Start server
-const PORT = config.port || 8000;
+const PORT = config.port;
 app.listen(PORT, () => {
     logger.info(`API Gateway running on port ${PORT}`);
     logger.info("Available endpoints:");

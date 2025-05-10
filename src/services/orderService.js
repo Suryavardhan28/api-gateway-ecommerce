@@ -6,7 +6,7 @@ const logger = require("../config/logger");
  * This implementation avoids using http-proxy-middleware which can have issues
  */
 const orderServiceProxy = (req, res, next) => {
-    const targetHost = process.env.ORDER_SERVICE_URL || "http://localhost:8083";
+    const targetHost = process.env.ORDER_SERVICE_URL;
     const targetUrl = new URL(targetHost);
 
     // When using router.use("/api/orders", ...), Express strips the prefix
@@ -22,7 +22,7 @@ const orderServiceProxy = (req, res, next) => {
     // Prepare options for the proxy request
     const options = {
         hostname: targetUrl.hostname,
-        port: targetUrl.port || 8083,
+        port: targetUrl.port,
         path: path,
         method: req.method,
         headers: {

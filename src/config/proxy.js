@@ -6,16 +6,11 @@ const logger = require("./logger");
 const result = dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 // Load service URLs from environment variables
-const USER_SERVICE_URL =
-    process.env.USER_SERVICE_URL || "http://localhost:8081";
-const PRODUCT_SERVICE_URL =
-    process.env.PRODUCT_SERVICE_URL || "http://localhost:8082";
-const ORDER_SERVICE_URL =
-    process.env.ORDER_SERVICE_URL || "http://localhost:8083";
-const PAYMENT_SERVICE_URL =
-    process.env.PAYMENT_SERVICE_URL || "http://localhost:8084";
-const NOTIFICATION_SERVICE_URL =
-    process.env.NOTIFICATION_SERVICE_URL || "http://localhost:8085";
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL;
+const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL;
+const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL;
+const PAYMENT_SERVICE_URL = process.env.PAYMENT_SERVICE_URL;
+const NOTIFICATION_SERVICE_URL = process.env.NOTIFICATION_SERVICE_URL;
 
 // NOTE: Direct HTTP proxy implementations are now used instead of http-proxy-middleware
 // See the service implementations in ../services/ directory:

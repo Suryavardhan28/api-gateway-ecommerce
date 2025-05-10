@@ -6,8 +6,7 @@ const logger = require("../config/logger");
  * This implementation avoids using http-proxy-middleware which can have issues
  */
 const paymentServiceProxy = (req, res, next) => {
-    const targetHost =
-        process.env.PAYMENT_SERVICE_URL || "http://localhost:8084";
+    const targetHost = process.env.PAYMENT_SERVICE_URL;
     const targetUrl = new URL(targetHost);
 
     // Get the original URL path
@@ -25,7 +24,7 @@ const paymentServiceProxy = (req, res, next) => {
     // Prepare options for the proxy request
     const options = {
         hostname: targetUrl.hostname,
-        port: targetUrl.port || 8084,
+        port: targetUrl.port,
         path: targetPath,
         method: req.method,
         headers: {

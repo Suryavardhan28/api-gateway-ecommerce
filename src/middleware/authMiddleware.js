@@ -102,8 +102,7 @@ const validateUserToken = async (req, res, next) => {
 
 // Generate service token for internal service calls
 const generateServiceToken = () => {
-    const serviceSecret =
-        process.env.SERVICE_SECRET || "api_gateway_secret_key";
+    const serviceSecret = process.env.SERVICE_SECRET;
 
     logger.info(
         "Generating service token with secret",

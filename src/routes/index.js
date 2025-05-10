@@ -12,12 +12,11 @@ const bodyParser = require("body-parser");
 const http = require("http");
 const axios = require("axios");
 const services = {
-    user: process.env.USER_SERVICE_URL || "http://localhost:8081",
-    product: process.env.PRODUCT_SERVICE_URL || "http://localhost:8082",
-    order: process.env.ORDER_SERVICE_URL || "http://localhost:8083",
-    payment: process.env.PAYMENT_SERVICE_URL || "http://localhost:8084",
-    notification:
-        process.env.NOTIFICATION_SERVICE_URL || "http://localhost:8085",
+    user: process.env.USER_SERVICE_URL,
+    product: process.env.PRODUCT_SERVICE_URL,
+    order: process.env.ORDER_SERVICE_URL,
+    payment: process.env.PAYMENT_SERVICE_URL,
+    notification: process.env.NOTIFICATION_SERVICE_URL,
 };
 
 // Create a special JSON parser for auth endpoints
@@ -31,6 +30,14 @@ const jsonParser = bodyParser.json({
 
 // Health check endpoint
 router.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "UP",
+        service: "API Gateway",
+        time: new Date().toISOString(),
+    });
+});
+
+router.get("/api/health", (req, res) => {
     res.status(200).json({
         status: "UP",
         service: "API Gateway",
@@ -105,6 +112,11 @@ router.get("/api/payments/history", verifyToken, paymentServiceProxy);
 // Notification routes (authenticated)
 router.get("/api/notifications", verifyToken, notificationServiceProxy);
 router.get("/api/notifications/:id", verifyToken, notificationServiceProxy);
+router.put(
+    "/api/notifications/read-all",
+    verifyToken,
+    notificationServiceProxy
+);
 router.put(
     "/api/notifications/:id/read",
     verifyToken,

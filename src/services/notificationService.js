@@ -6,8 +6,7 @@ const logger = require("../config/logger");
  * This implementation avoids using http-proxy-middleware which can have issues
  */
 const notificationServiceProxy = (req, res, next) => {
-    const targetHost =
-        process.env.NOTIFICATION_SERVICE_URL || "http://localhost:8085";
+    const targetHost = process.env.NOTIFICATION_SERVICE_URL;
     const targetUrl = new URL(targetHost);
 
     // Log the incoming request
@@ -18,7 +17,7 @@ const notificationServiceProxy = (req, res, next) => {
     // Prepare options for the proxy request
     const options = {
         hostname: targetUrl.hostname,
-        port: targetUrl.port || 8085,
+        port: targetUrl.port,
         path: req.url,
         method: req.method,
         headers: {
